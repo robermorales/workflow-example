@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eu
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+mkdir -p ${DIR}/diagrams
+
+docker build ${DIR} -qq -t zeebe-modeler:local
+
+exec docker run --rm -it \
+    -e DISPLAY=${DISPLAY} \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v ${DIR}/diagrams:/home/developer/diagrams \
+    --network host \
+    zeebe-modeler:local \
+    --no-sandbox \
+    "$@"

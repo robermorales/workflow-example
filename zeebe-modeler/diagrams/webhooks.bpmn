@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1agquny" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Zeebe Modeler" exporterVersion="0.8.0">
+  <bpmn:error id="Error_1rwqr2z" name="invalid_credit_card" />
+  <bpmn:process id="webhooks-process" isExecutable="true">
+    <bpmn:sequenceFlow id="start" sourceRef="event" targetRef="webhook-build" />
+    <bpmn:sequenceFlow id="SequenceFlow_1nvm3zc" sourceRef="send-webhook" targetRef="end" />
+    <bpmn:sequenceFlow id="SequenceFlow_1r839r2" sourceRef="webhook-build" targetRef="payload-transform" />
+    <bpmn:sequenceFlow id="SequenceFlow_1hznvnf" sourceRef="payload-transform" targetRef="send-webhook" />
+    <bpmn:startEvent id="event" name="Event received">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="eventId" target="eventId" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>start</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="payload-transform" name="Transform payload">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="payload-transform" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1r839r2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1hznvnf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="end" name="End">
+      <bpmn:incoming>SequenceFlow_1nvm3zc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="send-webhook" name="Send Webhook">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="http" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1hznvnf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1nvm3zc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="webhook-build" name="Build webhook">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="webhook-build-n2" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>start</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1r839r2</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="webhooks-process">
+      <bpmndi:BPMNEdge id="SequenceFlow_1hznvnf_di" bpmnElement="SequenceFlow_1hznvnf">
+        <di:waypoint x="540" y="117" />
+        <di:waypoint x="620" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1r839r2_di" bpmnElement="SequenceFlow_1r839r2">
+        <di:waypoint x="360" y="117" />
+        <di:waypoint x="440" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1nvm3zc_di" bpmnElement="SequenceFlow_1nvm3zc">
+        <di:waypoint x="720" y="117" />
+        <di:waypoint x="782" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0h9ucbg_di" bpmnElement="start">
+        <di:waypoint x="198" y="117" />
+        <di:waypoint x="260" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0174w2w_di" bpmnElement="webhook-build">
+        <dc:Bounds x="260" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_14fihiy_di" bpmnElement="send-webhook">
+        <dc:Bounds x="620" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1n3hoeu_di" bpmnElement="end">
+        <dc:Bounds x="782" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="790" y="142" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_03l6k02_di" bpmnElement="payload-transform">
+        <dc:Bounds x="440" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1c3h5d9_di" bpmnElement="event">
+        <dc:Bounds x="162" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="139" y="142" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

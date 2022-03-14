@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1diszyq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Zeebe Modeler" exporterVersion="0.10.0">
+  <bpmn:process id="Process_1ygl132" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_12kkhxf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_12kkhxf" sourceRef="StartEvent_1" targetRef="Activity_0ubzfyt" />
+    <bpmn:receiveTask id="Activity_0ubzfyt" name="payment.created" messageRef="Message_1bgvpqq">
+      <bpmn:incoming>Flow_12kkhxf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0toy198</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:endEvent id="Event_0mt7r5n">
+      <bpmn:incoming>Flow_0toy198</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0toy198" sourceRef="Activity_0ubzfyt" targetRef="Event_0mt7r5n" />
+  </bpmn:process>
+  <bpmn:message id="Message_1bgvpqq" name="payment.created">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=payment_id" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1ygl132">
+      <bpmndi:BPMNEdge id="Flow_12kkhxf_di" bpmnElement="Flow_12kkhxf">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="270" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0toy198_di" bpmnElement="Flow_0toy198">
+        <di:waypoint x="370" y="97" />
+        <di:waypoint x="432" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1qv2i4t_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vaez2e_di" bpmnElement="Activity_0ubzfyt">
+        <dc:Bounds x="270" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mt7r5n_di" bpmnElement="Event_0mt7r5n">
+        <dc:Bounds x="432" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
